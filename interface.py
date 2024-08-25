@@ -34,7 +34,7 @@ def encrypt():
         messagebox.showerror("Password Error", "Invalid password.")
     
 def decrypt():
-    # Define this function to handle decryption if needed
+
     pass
 
 def main_screen():
