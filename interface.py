@@ -14,14 +14,22 @@ def update_gif(frame_number):
     
 def encrypt():
     password = code.get()
-    print("Encrypt function called. Password entered:", password)  # Debugging print
+    print("Encrypt function called. Password entered:", password) 
     
     if password == "shiv":
         # Create a new Toplevel window
         encrypted_text_root = Toplevel(screen)
         
-        encrypted_text_root.geometry("400x300")
-        encrypted_text_root.title("String Encryption and Decryption Portal")
+        current_x = screen.winfo_x()
+        current_y = screen.winfo_y()
+        
+        
+        new_x = current_x + 185  
+        new_y = current_y + 250
+        
+        
+        encrypted_text_root.geometry(f"400x300+{new_x}+{new_y}")
+        encrypted_text_root.title("Encrypted the message ")
         encrypted_text_root.configure(bg="#ed3833")
         
         # Optionally, add widgets to the new window here
@@ -32,10 +40,38 @@ def encrypt():
         
     else:
         messagebox.showerror("Password Error", "Invalid password.")
-    
+        
 def decrypt():
+    password=code.get()
+    print("Encrypt function called. Password entered:", password)
+    
+    if password=="shiv":
+       # Create a new Toplevel window
+       decrypted_text_root=Toplevel(screen)
+       
+       current_x = screen.winfo_x()
+       current_y = screen.winfo_y()
+        
+        # Calculate the new window's position (e.g., place it 50 pixels left of the current window)
+       new_x = current_x + 950  # Adjust 400 to the width of the new window if needed
+       new_y = current_y + 250
+        
+       decrypted_text_root.geometry(f"400x300+{new_x}+{new_y}")
+       decrypted_text_root.title("Decrypted your cipher text ")  
+       decrypted_text_root.configure(bg="#00bd56")
+       
+       # Optionally, add widgets to the new window here
+       Label(decrypted_text_root,text="Decrypted Text",font=("Arial",12),bg="#00bd65",fg="white").pack(pady=10)
+       Text(decrypted_text_root, font=("Arial", 12), height=45, width=45).pack(padx=20, pady=20)
+       
+       decrypted_text_root.mainloop()
+       
+    else:
+        messagebox.showerror("Password Error", "Invalid password.")
 
-    pass
+    
+    
+
 
 def main_screen():
     global screen
