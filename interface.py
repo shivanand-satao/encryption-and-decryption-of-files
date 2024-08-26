@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
-import base64
+
 
 def update_gif(frame_number):
     global gif_frames
@@ -11,6 +11,12 @@ def update_gif(frame_number):
     if frame_number >= len(gif_frames):
         frame_number = 0
     screen.after(100, update_gif, frame_number)
+    
+    
+    
+    
+    
+    
     
 def encrypt():
     password = code.get()
@@ -40,6 +46,9 @@ def encrypt():
         
     else:
         messagebox.showerror("Password Error", "Invalid password.")
+        
+        
+        
         
 def decrypt():
     password=code.get()
@@ -71,6 +80,7 @@ def decrypt():
 
     
     
+    
 
 
 def main_screen():
@@ -82,6 +92,13 @@ def main_screen():
     global gif_label
 
     screen = Tk()
+    
+    
+    
+    
+    
+    
+    
     screen.geometry("1600x900")
     screen.title("String Encryption and Decryption Portal")
     
@@ -105,7 +122,7 @@ def main_screen():
     Label(encrypt_frame, text="Enter the text to Encrypt", font="arial 15", fg="white", bg="#ed3833").pack(pady=10)
     encrypt_textbox = Text(encrypt_frame, font="Roboto 14", bg="white", relief=GROOVE, wrap=WORD, bd=2)
     encrypt_textbox.pack(pady=10, padx=10, expand=True, fill=BOTH)
-    
+
     Button(encrypt_frame, text="Encrypt", height="2", width=15, bg="white", fg="#ed3833", bd=2, command=encrypt).pack(pady=20)
 
     # Decryption block
@@ -118,16 +135,36 @@ def main_screen():
     
     Button(decrypt_frame, text="Decrypt", height="2", width=15, bg="white", fg="#00bd56", bd=2, command=decrypt).pack(pady=20)
     
+    
+    
+    
+    
+    
+    
     # Center section for GIF, password, and reset button
     center_frame = Frame(screen)
     center_frame.place(relx=0.5, rely=0.75, anchor=CENTER)
     
+    #making it enter using the center_frame
     Label(center_frame, text="Enter secret key for encryption and decryption", fg="black", font=("calibri", 13)).pack(pady=10)
     
+    #making it enter using the center_frame
     code = StringVar()
     Entry(center_frame, textvariable=code, width=19, bd=0, font=("arial", 25), show='*').pack(pady=10)
     
+    
+    #Reset button #making it enter using the center_frame
     Button(center_frame, text="RESET", height="2", width=30, bg="#1089ff", fg="white", bd=0, command=lambda: [code.set(""), encrypt_textbox.delete(1.0, END), decrypt_textbox.delete(1.0, END)]).pack(pady=20)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     screen.mainloop()
 
