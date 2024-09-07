@@ -1,6 +1,10 @@
 from tkinter import *
 from tkinter import messagebox
 from PIL import Image, ImageTk
+from Crypto.Cipher import AES
+
+
+aes_key = b'W4d#2Rf0Zc8y6S*7@9jK^1Lm5p$3XqYh'
 
 
 def update_gif(frame_number):
@@ -20,7 +24,7 @@ def update_gif(frame_number):
     
 def encrypt():
     password = code.get()
-    print("Encrypt function called. Password entered:", password) 
+    print("Encrypt function called. Password entered:", password)
     
     if password == "shiv":
         # Create a new Toplevel window
@@ -29,56 +33,86 @@ def encrypt():
         current_x = screen.winfo_x()
         current_y = screen.winfo_y()
         
-        
         new_x = current_x + 185  
         new_y = current_y + 250
         
-        
         encrypted_text_root.geometry(f"400x300+{new_x}+{new_y}")
-        encrypted_text_root.title("Encrypted the message ")
+        encrypted_text_root.title("Encrypted Message")
         encrypted_text_root.configure(bg="#ed3833")
         
-        # Optionally, add widgets to the new window here
-        Label(encrypted_text_root, text="Encrypted Text", font=("Arial", 12),bg="#ed3833",fg="white").pack(pady=10)
-        Text(encrypted_text_root, font=("Arial", 12), height=45, width=45).pack(padx=20, pady=20)
+        Label(encrypted_text_root, text="Encrypted Text", font=("Arial", 12), bg="#ed3833", fg="white").pack(pady=10)
+        
+        encrypted_textbox = Text(encrypted_text_root, font=("Arial", 12), height=10, width=40)
+        encrypted_textbox.pack(padx=20, pady=20)
+        
+        # Get the text to encrypt from the encryption text box
+        text_to_encrypt = encrypt_textbox.get("1.0", END).strip()
+        
+        # Encrypt the text using AES (save both ciphertext and nonce)
+        cipher = AES.new(aes_key, AES.MODE_EAX)
+        ciphertext, tag = cipher.encrypt_and_digest(text_to_encrypt.encode('utf-8'))
+        nonce = cipher.nonce
+        
+        # Store both ciphertext and nonce as hex strings for easy transfer
+        encrypted_text = ciphertext.hex() + ":" + nonce.hex()
+        
+        # Insert encrypted text into the Text widget
+        encrypted_textbox.insert(END, encrypted_text)
         
         encrypted_text_root.mainloop()
         
     else:
         messagebox.showerror("Password Error", "Invalid password.")
-        
-        
-        
-        
+
+
 def decrypt():
-    password=code.get()
-    print("Encrypt function called. Password entered:", password)
+    password = code.get()
+    print("Decrypt function called. Password entered:", password)
     
-    if password=="shiv":
-       # Create a new Toplevel window
-       decrypted_text_root=Toplevel(screen)
+    if password == "shiv":
+        # Create a new Toplevel window for decrypted text
+        decrypted_text_root = Toplevel(screen)
        
-       current_x = screen.winfo_x()
-       current_y = screen.winfo_y()
+        current_x = screen.winfo_x()
+        current_y = screen.winfo_y()
         
-        # Calculate the new window's position (e.g., place it 50 pixels left of the current window)
-       new_x = current_x + 950  # Adjust 400 to the width of the new window if needed
-       new_y = current_y + 250
+        new_x = current_x + 950  # Adjust as needed
+        new_y = current_y + 250
         
-       decrypted_text_root.geometry(f"400x300+{new_x}+{new_y}")
-       decrypted_text_root.title("Decrypted your cipher text ")  
-       decrypted_text_root.configure(bg="#00bd56")
+        decrypted_text_root.geometry(f"400x300+{new_x}+{new_y}")
+        decrypted_text_root.title("Decrypted Message")  
+        decrypted_text_root.configure(bg="#00bd56")
        
-       # Optionally, add widgets to the new window here
-       Label(decrypted_text_root,text="Decrypted Text",font=("Arial",12),bg="#00bd65",fg="white").pack(pady=10)
-       Text(decrypted_text_root, font=("Arial", 12), height=45, width=45).pack(padx=20, pady=20)
+        Label(decrypted_text_root, text="Decrypted Text", font=("Arial", 12), bg="#00bd56", fg="white").pack(pady=10)
+        
+        decrypted_textbox = Text(decrypted_text_root, font=("Arial", 12), height=10, width=40)
+        decrypted_textbox.pack(padx=20, pady=20)
        
-       decrypted_text_root.mainloop()
-       
+        # Get the encrypted text from the decrypt textbox
+        encrypted_text = decrypt_textbox.get("1.0", END).strip()
+        
+        try:
+            # Split ciphertext and nonce from the hex string
+            ciphertext_hex, nonce_hex = encrypted_text.split(":")
+            
+            # Convert the encrypted text and nonce back to bytes
+            ciphertext = bytes.fromhex(ciphertext_hex)
+            nonce = bytes.fromhex(nonce_hex)
+            
+            # Create a new AES cipher object with the nonce and decrypt the ciphertext
+            cipher = AES.new(aes_key, AES.MODE_EAX, nonce=nonce)
+            decrypted_text = cipher.decrypt(ciphertext).decode('utf-8')
+            
+            # Insert the decrypted text into the new textbox
+            decrypted_textbox.insert(END, decrypted_text)
+        
+        except ValueError as e:
+            messagebox.showerror("Decryption Error", f"Failed to decrypt text: {e}")
+        
+        decrypted_text_root.mainloop()
     else:
         messagebox.showerror("Password Error", "Invalid password.")
 
-    
     
     
 
