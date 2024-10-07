@@ -8,9 +8,10 @@ aes_key = b'W4d#2Rf0Zc8y6S*7@9jK^1Lm5p$3XqYh'
 
 # Predefined recipients with masked details (first 4 chars of name, birthdate)
 recipients = {
-    "Alice": {"password": "1234", "masked_name": "Alic****", "birth_date": "05-07"},
-    "Bob": {"password": "1234", "masked_name": "Bob****", "birth_date": "12-11"},
-    "Charlie": {"password": "1234", "masked_name": "Char****", "birth_date": "23-04"}
+    "shivanand": {"password": "1234567890", "masked_name": "shiv", "birth_date": "2108"},
+    "sharvari": {"password": "1234567890", "masked_name": "shar", "birth_date": "1111"},
+    "shreya": {"password": "1234567890", "masked_name": "shre", "birth_date": "1111"},
+    "omkar": {"password": "1234567890", "masked_name": "omka", "birth_date": "1111"}
 }
 def reset():
     # Clear the entry fields for the password and decrypt text
@@ -65,7 +66,7 @@ def encrypt():
     password = code.get()
     print("Encrypt function called. Password entered:", password)
 
-    if password == "1234":
+    if password == "1234567890":
         encrypted_text_root = Toplevel(screen)
         current_x = screen.winfo_x()
         current_y = screen.winfo_y()
@@ -88,7 +89,7 @@ def decrypt():
     password = code.get()
     print("Decrypt function called. Password entered:", password)
 
-    if password == "1234":
+    if password == "1234567890":
         encrypted_text = decrypt_textbox.get("1.0", END).strip()
 
         try:
@@ -178,10 +179,14 @@ def main_screen():
     encrypt_frame = Frame(screen, bg="#ed3833", bd=2, relief=RIDGE)
     encrypt_frame.place(x=screen.winfo_screenwidth()/9 - 70, y=50, width=screen.winfo_screenwidth()/3 - 70, height=screen.winfo_screenheight() - 150)
 
-    Label(encrypt_frame, text="Enter Password to Encrypt", font="arial 15", fg="white", bg="#ed3833").pack(pady=10)
+    Label(encrypt_frame, text="Enter the text to encrypt", font="arial 15", fg="white", bg="#ed3833").pack(pady=10)
 
-    code = Entry(encrypt_frame, font="Roboto 14", bg="white", relief=GROOVE, bd=2)
-    code.pack(padx=5, pady=10)
+    
+    encrypt_textbox = Text(encrypt_frame, font="Roboto 14", bg="white", relief=GROOVE, wrap=WORD, bd=2)
+    encrypt_textbox.pack(padx=5, pady=10)
+    
+    encrypt_frame = Entry(encrypt_frame, font="Roboto 14", bg="white", relief=GROOVE, bd=2)
+    encrypt_frame.pack(padx=5, pady=10)
 
     Button(encrypt_frame, text="Encrypt", font="arial 15", bg="white", fg="#ed3833", command=encrypt).pack(pady=5)
 
