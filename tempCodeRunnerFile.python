@@ -1,0 +1,78 @@
+# Install the required libraries
+!pip install matplotlib networkx
+
+import heapq
+import matplotlib.pyplot as plt
+import networkx as nx
+
+def dijkstra(graph, start):
+    queue = [(0, start)]
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    visited = set()
+    predecessors = {node: None for node in graph}
+    
+    while queue:
+        (current_distance, current_node) = heapq.heappop(queue)
+        
+        if current_node in visited:
+            continue
+        
+        visited.add(current_node)
+        
+        for neighbor, weight in graph[current_node]:
+            distance = current_distance + weight
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                predecessors[neighbor] = current_node
+                heapq.heappush(queue, (distance, neighbor))
+                
+    return distances, predecessors
+
+# Function to get the shortest path from the predecessors dictionary
+def get_path(predecessors, start, end):
+    path = []
+    current = end
+    while current is not None:
+        path.append(current)
+        current = predecessors[current]
+    path.reverse()
+    return path
+
+# Example graph
+graph = {
+    'A': [('B', 1), ('C', 4)],
+    'B': [('A', 1), ('C', 2), ('D', 5)],
+    'C': [('A', 4), ('B', 2), ('D', 1)],
+    'D': [('B', 5), ('C', 1)]
+}
+
+# Visualize the graph
+G = nx.Graph()
+for node, edges in graph.items():
+    for neighbor, weight in edges:
+        G.add_edge(node, neighbor, weight=weight)
+
+pos = nx.spring_layout(G)
+nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=2000, font_size=16, font_weight='bold')
+edge_labels = nx.get_edge_attributes(G, 'weight')
+nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+plt.title("Graph Representation")
+plt.show()
+
+# Run Dijkstra's Algorithm
+start_node = 'A'
+distances, predecessors = dijkstra(graph, start_node)
+print(f"Shortest distances from {start_node}: {distances}")
+
+# Visualize the shortest paths from the start node
+for end_node in graph:
+    if end_node == start_node:
+        continue
+    path = get_path(predecessors, start_node, end_node)
+    path_edges = list(zip(path, path[1:]))
+    nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=2000, font_size=16, font_weight='bold')
+    nx.draw_networkx_edges(G, pos, edgelist=path_edges, edge_color='r', width=2)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+    plt.title(f"Shortest Path from {start_node} to {end_node}")
+    plt.show()
