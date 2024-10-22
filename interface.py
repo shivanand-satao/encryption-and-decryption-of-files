@@ -6,17 +6,26 @@ from Crypto.Cipher import AES
 # AES encryption key
 aes_key = b'W4d#2Rf0Zc8y6S*7@9jK^1Lm5p$3XqYh'
 
-# Predefined recipients with masked details (first 4 chars of name, birthdate)
+# Predefined recipients with masked details
 recipients = {
     "shivanand": {"password": "1234567890", "masked_name": "shiv", "birth_date": "2108"},
     "sharvari": {"password": "1234567890", "masked_name": "shar", "birth_date": "1111"},
     "shreya": {"password": "1234567890", "masked_name": "shre", "birth_date": "1111"},
     "omkar": {"password": "1234567890", "masked_name": "omka", "birth_date": "1111"}
 }
+
+def bit_shift_right(text):
+    """Right shift each character by 1 bit"""
+    return ''.join(chr((ord(char) >> 1) & 0xFF) for char in text)
+
+def bit_shift_left(text):
+    """Left shift each character by 1 bit"""
+    return ''.join(chr((ord(char) << 1) & 0xFF) for char in text)
+
 def reset():
-    # Clear the entry fields for the password and decrypt text
-    code.set('')  # Clear password field
+    code.set('')
     decrypt_textbox.delete("1.0", END)
+
 def show_recipient_popup(encrypted_text_root, text_to_encrypt):
     popup = Toplevel(screen)
     popup.geometry("300x200")
@@ -35,7 +44,12 @@ def show_recipient_popup(encrypted_text_root, text_to_encrypt):
         if recipient in recipients:
             masked_name = recipients[recipient]["masked_name"]
             birth_date = recipients[recipient]["birth_date"]
-            encrypted_text = encrypt_text_with_recipient(text_to_encrypt, masked_name, birth_date)
+            
+            # Right shift the masked_name and birth_date before encryption
+            shifted_name = bit_shift_right(masked_name)
+            shifted_birth = bit_shift_right(birth_date)
+            
+            encrypted_text = encrypt_text_with_recipient(text_to_encrypt, shifted_name, shifted_birth)
 
             encrypted_textbox = Text(encrypted_text_root, font=("Arial", 12), height=10, width=40)
             encrypted_textbox.pack(padx=20, pady=20)
@@ -47,12 +61,75 @@ def show_recipient_popup(encrypted_text_root, text_to_encrypt):
 
     Button(popup, text="Submit", command=on_recipient_selected).pack(pady=20)
 
-def encrypt_text_with_recipient(text_to_encrypt, masked_name, birth_date):
+def encrypt_text_with_recipient(text_to_encrypt, shifted_name, shifted_birth):
     cipher = AES.new(aes_key, AES.MODE_EAX)
     ciphertext, tag = cipher.encrypt_and_digest(text_to_encrypt.encode('utf-8'))
     nonce = cipher.nonce
-    encrypted_text = ciphertext.hex() + ":" + nonce.hex() + f":{masked_name}:{birth_date}"
+    encrypted_text = ciphertext.hex() + ":" + nonce.hex() + f":{shifted_name}:{shifted_birth}"
     return encrypted_text
+
+def decrypt():
+    password = code.get()
+    print("Decrypt function called. Password entered:", password)
+
+    if password == "1234567890":
+        encrypted_text = decrypt_textbox.get("1.0", END).strip()
+
+        try:
+            ciphertext_hex, nonce_hex, shifted_name, shifted_birth = encrypted_text.split(":")
+            ciphertext = bytes.fromhex(ciphertext_hex)
+            nonce = bytes.fromhex(nonce_hex)
+            cipher = AES.new(aes_key, AES.MODE_EAX, nonce=nonce)
+            decrypted_text = cipher.decrypt(ciphertext).decode('utf-8')
+
+            show_validation_popup(shifted_name, shifted_birth, decrypted_text)
+
+        except ValueError as e:
+            messagebox.showerror("Decryption Error", f"Failed to decrypt text: {e}")
+    else:
+        messagebox.showerror("Password Error", "Invalid password.")
+
+def show_validation_popup(shifted_name, shifted_birth, decrypted_text):
+    popup = Toplevel(screen)
+    popup.geometry("300x200")
+    popup.title("Validate Recipient")
+
+    Label(popup, text="Enter masked name:").pack(pady=5)
+    masked_name_entry = Entry(popup)
+    masked_name_entry.pack(pady=5)
+
+    Label(popup, text="Enter birth date (DD-MM):").pack(pady=5)
+    birth_date_entry = Entry(popup)
+    birth_date_entry.pack(pady=5)
+
+    def validate():
+        # Right shift the entered values for comparison
+        entered_name_shifted = bit_shift_right(masked_name_entry.get())
+        entered_birth_shifted = bit_shift_right(birth_date_entry.get())
+        
+        if entered_name_shifted == shifted_name and entered_birth_shifted == shifted_birth:
+            show_decrypted_text(decrypted_text)
+            popup.destroy()
+        else:
+            messagebox.showerror("Validation Error", "Masked name or birth date is incorrect.")
+
+    Button(popup, text="Validate", command=validate).pack(pady=20)
+
+def show_decrypted_text(decrypted_text):
+    decrypted_text_root = Toplevel(screen)
+    current_x = screen.winfo_x()
+    current_y = screen.winfo_y()
+    new_x = current_x + 950
+    new_y = current_y + 250
+
+    decrypted_text_root.geometry(f"400x300+{new_x}+{new_y}")
+    decrypted_text_root.title("Decrypted Message")
+    decrypted_text_root.configure(bg="#00bd56")
+
+    Label(decrypted_text_root, text="Decrypted Text", font=("Arial", 12), bg="#00bd56", fg="white").pack(pady=10)
+    decrypted_textbox = Text(decrypted_text_root, font=("Arial", 12), height=10, width=40)
+    decrypted_textbox.pack(padx=20, pady=20)
+    decrypted_textbox.insert(END, decrypted_text)
 
 def update_gif(frame_number):
     global gif_frames
@@ -84,65 +161,6 @@ def encrypt():
         Button(encrypted_text_root, text="Next", command=lambda: show_recipient_popup(encrypted_text_root, encrypt_textbox.get("1.0", END).strip())).pack(pady=20)
     else:
         messagebox.showerror("Password Error", "Invalid password.")
-
-def decrypt():
-    password = code.get()
-    print("Decrypt function called. Password entered:", password)
-
-    if password == "1234567890":
-        encrypted_text = decrypt_textbox.get("1.0", END).strip()
-
-        try:
-            ciphertext_hex, nonce_hex, masked_name, birth_date = encrypted_text.split(":")
-            ciphertext = bytes.fromhex(ciphertext_hex)
-            nonce = bytes.fromhex(nonce_hex)
-            cipher = AES.new(aes_key, AES.MODE_EAX, nonce=nonce)
-            decrypted_text = cipher.decrypt(ciphertext).decode('utf-8')
-
-            show_validation_popup(masked_name, birth_date, decrypted_text)
-
-        except ValueError as e:
-            messagebox.showerror("Decryption Error", f"Failed to decrypt text: {e}")
-    else:
-        messagebox.showerror("Password Error", "Invalid password.")
-
-def show_validation_popup(masked_name, birth_date, decrypted_text):
-    popup = Toplevel(screen)
-    popup.geometry("300x200")
-    popup.title("Validate Recipient")
-
-    Label(popup, text="Enter masked name:").pack(pady=5)
-    masked_name_entry = Entry(popup)
-    masked_name_entry.pack(pady=5)
-
-    Label(popup, text="Enter birth date (DD-MM):").pack(pady=5)
-    birth_date_entry = Entry(popup)
-    birth_date_entry.pack(pady=5)
-
-    def validate():
-        if masked_name_entry.get() == masked_name and birth_date_entry.get() == birth_date:
-            show_decrypted_text(decrypted_text)
-            popup.destroy()
-        else:
-            messagebox.showerror("Validation Error", "Masked name or birth date is incorrect.")
-
-    Button(popup, text="Validate", command=validate).pack(pady=20)
-
-def show_decrypted_text(decrypted_text):
-    decrypted_text_root = Toplevel(screen)
-    current_x = screen.winfo_x()
-    current_y = screen.winfo_y()
-    new_x = current_x + 950
-    new_y = current_y + 250
-
-    decrypted_text_root.geometry(f"400x300+{new_x}+{new_y}")
-    decrypted_text_root.title("Decrypted Message")
-    decrypted_text_root.configure(bg="#00bd56")
-
-    Label(decrypted_text_root, text="Decrypted Text", font=("Arial", 12), bg="#00bd56", fg="white").pack(pady=10)
-    decrypted_textbox = Text(decrypted_text_root, font=("Arial", 12), height=10, width=40)
-    decrypted_textbox.pack(padx=20, pady=20)
-    decrypted_textbox.insert(END, decrypted_text)
 
 def main_screen():
     global screen
@@ -181,23 +199,16 @@ def main_screen():
 
     Label(encrypt_frame, text="Enter the text to encrypt", font="arial 15", fg="white", bg="#ed3833").pack(pady=10)
 
-    
     encrypt_textbox = Text(encrypt_frame, font="Roboto 14", bg="white", relief=GROOVE, wrap=WORD, bd=2)
     encrypt_textbox.pack(padx=5, pady=10)
     
-    encrypt_frame = Entry(encrypt_frame, font="Roboto 14", bg="white", relief=GROOVE, bd=2)
-    encrypt_frame.pack(padx=5, pady=10)
-
     Button(encrypt_frame, text="Encrypt", font="arial 15", bg="white", fg="#ed3833", command=encrypt).pack(pady=5)
 
-    # Center section for GIF, password, and reset button
     center_frame = Frame(screen)
     center_frame.place(relx=0.5, rely=0.75, anchor=CENTER)
 
-    # Making it enter using the center_frame
     Label(center_frame, text="Enter secret key for encryption and decryption", fg="black", font=("calibri", 13)).pack(pady=10)
 
-    # Making it enter using the center_frame
     code = StringVar()
     Entry(center_frame, textvariable=code, width=19, bd=0, font=("arial", 25), show='*').pack(pady=5)
 
@@ -205,4 +216,5 @@ def main_screen():
 
     screen.mainloop()
 
-main_screen()
+if __name__ == "__main__":
+    main_screen()
