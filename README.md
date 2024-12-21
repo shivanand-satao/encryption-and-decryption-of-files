@@ -27,7 +27,8 @@
 *Selecting a recipient for message encryption with predefined user list.*
 
 ### 4. Decryption Validation
-![Decryption Validation]![Uploading Screenshot 2024-12-21 175654.png…]()
+![Decryption Validation]![Screenshot 2024-12-21 175654](https://github.com/user-attachments/assets/455b5d02-1e46-4d3d-a6e9-4a7048478fc6)
+
 *Two-factor authentication popup for message decryption.*
 
 ## 📋 Prerequisites
