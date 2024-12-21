@@ -19,15 +19,15 @@
 
 
 ### 2. Encryption Process
-[Screenshot 2024-12-21 175603](https://github.com/user-attachments/assets/df2e7d90-0bfe-4093-8201-4370d246cad2)
+![Encryption Process]![Screenshot 2024-12-21 175603](https://github.com/user-attachments/assets/df2e7d90-0bfe-4093-8201-4370d246cad2)
 *Text encryption interface with recipient selection dropdown.*
 
 ### 3. Recipient Selection
-[Screenshot 2024-12-21 175648](https://github.com/user-attachments/assets/22589be9-40e2-4398-b589-5dbf5fb0851d)
+![Reciepient Selection]![Screenshot 2024-12-21 175648](https://github.com/user-attachments/assets/22589be9-40e2-4398-b589-5dbf5fb0851d)
 *Selecting a recipient for message encryption with predefined user list.*
 
 ### 4. Decryption Validation
-[Screenshot 2024-12-21 175654](https://github.com/user-attachments/assets/455b5d02-1e46-4d3d-a6e9-4a7048478fc6)
+![Decryption Validation]![Screenshot 2024-12-21 175654](https://github.com/user-attachments/assets/455b5d02-1e46-4d3d-a6e9-4a7048478fc6)
 
 *Two-factor authentication popup for message decryption.*
 
