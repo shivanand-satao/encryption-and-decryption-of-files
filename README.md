@@ -14,20 +14,20 @@
 ## 📸 Screenshots
 
 ### 1. Main Interface
-![Main Interface]![Screenshot 2024-12-21 175528](https://github.com/user-attachments/assets/d87213ae-3a42-43ff-be53-2b5dbfd61ae7)
+[Screenshot 2024-12-21 175528](https://github.com/user-attachments/assets/d87213ae-3a42-43ff-be53-2b5dbfd61ae7)
 *The main application window showing encryption (left) and decryption (right) panels with the central lock icon.*
 
 
 ### 2. Encryption Process
-![Encryption Process]![Screenshot 2024-12-21 175603](https://github.com/user-attachments/assets/df2e7d90-0bfe-4093-8201-4370d246cad2)
+[Screenshot 2024-12-21 175603](https://github.com/user-attachments/assets/df2e7d90-0bfe-4093-8201-4370d246cad2)
 *Text encryption interface with recipient selection dropdown.*
 
 ### 3. Recipient Selection
-![Recipient Selection]![Screenshot 2024-12-21 175648](https://github.com/user-attachments/assets/22589be9-40e2-4398-b589-5dbf5fb0851d)
+[Screenshot 2024-12-21 175648](https://github.com/user-attachments/assets/22589be9-40e2-4398-b589-5dbf5fb0851d)
 *Selecting a recipient for message encryption with predefined user list.*
 
 ### 4. Decryption Validation
-![Decryption Validation]![Screenshot 2024-12-21 175654](https://github.com/user-attachments/assets/455b5d02-1e46-4d3d-a6e9-4a7048478fc6)
+[Screenshot 2024-12-21 175654](https://github.com/user-attachments/assets/455b5d02-1e46-4d3d-a6e9-4a7048478fc6)
 
 *Two-factor authentication popup for message decryption.*
 
