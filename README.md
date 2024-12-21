@@ -14,7 +14,7 @@
 ## 📸 Screenshots
 
 ### 1. Main Interface
-[Screenshot 2024-12-21 175528](https://github.com/user-attachments/assets/d87213ae-3a42-43ff-be53-2b5dbfd61ae7)
+![Main Interface][Screenshot 2024-12-21 175528](https://github.com/user-attachments/assets/d87213ae-3a42-43ff-be53-2b5dbfd61ae7)
 *The main application window showing encryption (left) and decryption (right) panels with the central lock icon.*
 
 
