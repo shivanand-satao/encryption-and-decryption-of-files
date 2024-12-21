@@ -55,11 +55,6 @@ string-encryption-portal/
 │   ├── recipient_selection.png   # Recipient selection popup
 │   └── decryption_validation.png # Validation popup
 │
-├── requirements.txt         # Project dependencies
-│
-├── .gitignore              # Git ignore file
-│
-├── LICENSE                 # License file
 │
 └── README.md               # Project documentation
 ```
