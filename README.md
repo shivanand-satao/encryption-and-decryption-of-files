@@ -2,6 +2,7 @@
 
 > A secure desktop application built with Python and Tkinter that allows users to encrypt and decrypt text messages with AES encryption. The application includes recipient-specific encryption and a two-factor authentication system for decryption.
 
+
 ## ✨ Features
 
 - ✅ **AES Encryption**: Implements secure AES encryption for text messages
