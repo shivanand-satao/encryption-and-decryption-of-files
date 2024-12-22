@@ -142,7 +142,7 @@ def update_gif(frame_number):
 def encrypt():
     password = code.get()
     print("Encrypt function called. Password entered:", password)
-
+()
     if password == "1234567890":
         encrypted_text_root = Toplevel(screen)
         current_x = screen.winfo_x()
